@@ -1,0 +1,138 @@
+112. Path Sum
+Given a binary tree and a sum, determine if the tree has a root-to-leaf path such that adding up all the values along the path equals the given sum.
+Note: A leaf is a node with no children.
+Example:
+Given the below binary tree and sum = 22,
+      5
+     / \
+    4   8
+   /   / \
+  11  13  4
+ /  \      \
+7    2      1
+return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
+
+Solution:
+class Solution {
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if (root == null) return false;
+        if (root.left == null && root.right == null) return (sum - root.val) == 0;
+        return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+    }
+}
+
+113. Path Sum II
+Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
+
+Note: A leaf is a node with no children.
+
+Example:
+Given the below binary tree and sum = 22,
+      5
+     / \
+    4   8
+   /   / \
+  11  13  4
+ /  \    / \
+7    2  5   1
+Return:
+[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+
+Solution:
+class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int sum){
+	List<List<Integer>> result  = new LinkedList<List<Integer>>();
+	List<Integer> currentResult  = new LinkedList<Integer>();
+	pathSum(root,sum,currentResult,result);
+	return result;
+}
+
+public void pathSum(TreeNode root, int sum, List<Integer> currentResult,
+		List<List<Integer>> result) {
+
+	if (root == null)
+		return;
+	currentResult.add(new Integer(root.val));
+	if (root.left == null && root.right == null && sum == root.val) {
+		result.add(new LinkedList(currentResult));
+		currentResult.remove(currentResult.size() - 1);//don't forget to remove the last integer
+		return;
+	} else {
+		pathSum(root.left, sum - root.val, currentResult, result);
+		pathSum(root.right, sum - root.val, currentResult, result);
+	}
+	currentResult.remove(currentResult.size() - 1);
+}
+}
+
+257. Binary Tree Paths
+Given a binary tree, return all root-to-leaf paths.
+
+Note: A leaf is a node with no children.
+Example:
+Input:
+   1
+ /   \
+2     3
+ \
+  5
+Output: ["1->2->5", "1->3"]
+Explanation: All root-to-leaf paths are: 1->2->5, 1->3
+
+Solution:
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+      LinkedList<String> paths = new LinkedList<String>();
+      path(root,"",paths);
+      return paths;
+    }
+    public void path(TreeNode root, String path, LinkedList<String> paths){
+      if (root != null){
+      path += Integer.toString(root.val);
+      if(root.left == null && root.right == null) 
+          paths.add(path);
+      else{
+          path +="->";
+          path(root.left, path, paths);
+          path(root.right, path, paths);
+      }
+    }
+    }
+}
+
+129. Sum Root to Leaf Numbers
+Given a binary tree containing digits from 0-9 only, each root-to-leaf path could represent a number.
+
+An example is the root-to-leaf path 1->2->3 which represents the number 123.
+
+Find the total sum of all root-to-leaf numbers.
+
+Note: A leaf is a node with no children.
+
+Example:
+
+Input: [1,2,3]
+    1
+   / \
+  2   3
+Output: 25
+Explanation:
+The root-to-leaf path 1->2 represents the number 12.
+The root-to-leaf path 1->3 represents the number 13.
+Therefore, sum = 12 + 13 = 25.
+
+Solution:
+class Solution {
+    public int sumNumbers(TreeNode root) {
+        return sum(root,0);
+    }
+    public int sum(TreeNode root, int sum){
+     if(root==null) return 0;
+     if(root.left == null && root.right == null) 
+        return (10*sum) + root.val;
+     return sum(root.left,(10*sum) + root.val)+sum(root.right,(10*sum) + root.val);
+    }
+}
